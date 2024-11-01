@@ -1,0 +1,85 @@
+RandomVSRandom Report
+------------------------------------------------------------------------------------------
+1) What is your conclusion, does the first or second player have some advantage, at least for a random strategy?
+Although both Player one and two seem to have probabilities of winning close of 0.5 each, in every run of
+OthelloControllerRandomVSRandom, Player two has a higher probability of winning compared to player 1. There may be some
+advantage for player 2, although it doesn't seem clear without further investigation or proof.
+------------------------------------------------------------------------------------------
+2) Watch https://www.youtube.com/watch?v=Iq9DzN6mvYA
+------------------------------------------------------------------------------------------
+3) Briefly write your thoughts on the above video below:
+The video discusses how statistics can be analysed both in a programmatically implemented or mathematical solution,
+providing simplified methods of proving statistical hypotheses. The talk discusses how various methods of analysing
+hypotheses, such as bootstrap resampling, which is the analysis of randomly sampled set including duplicates of an
+initial sample set, alongside shuffling which analyses the mean if results of one hypothesis are shuffled with the
+alternate. All these methods are also shown as implementations in python using the random library, where random
+indexes from a sample set are processed in different ways to obtain new conclusions. The other two methods include
+direct simulation, which is the repeated simulation of an event to record the trend or frequency of a particular
+outcome to support or disprove a hypothesis, and the last method is cross validation. But the premise of the video
+isto show how all these complex processes can be represented simply using for loops and simple programmed arithmetic,
+and discusses how this method helps us understand the question or hypothesis that is being asked much better than with
+calculations.
+------------------------------------------------------------------------------------------
+4) H0 is: There is no advantage for either player in a game between two players from PlayerRandom.
+------------------------------------------------------------------------------------------
+5) Ha is: There is an advantage for one player in a game between two players from PlayerRandom.
+------------------------------------------------------------------------------------------
+6) Choose one of the following and delete the other:
+   My experimental results support Ha, so they do not support H0
+------------------------------------------------------------------------------------------
+7) As in the video, use either math or code (add a Java Class) to argue for or against H0
+
+OthelloControllerRandomVsRandom performs a direct simulation of 10,000 different othello games between two Random
+Players, recorded the game winners and totalled the frequencies of P1 and P2 winning. Then it calculated the probability
+of either player winning by dividing the total wins of a player by 10,000 (total games played). The results are:
+Probability P1 wins=0.4566
+Probability P2 wins=0.4991
+These results indicate that P1 won 4566 times and P2 won 4991 times out of 10000 games, with the remainder being neither
+winning, or a tied-game. To do a test considering only two possible outcomes, we will only calculate probabilities based
+on games that are not tied. Since tied results do hold relevance to the probability of either player winning, we will
+ignore any games that are tied and will calculate total games and their corresponding probabilities using only the games
+where one of the players won:
+
+Hence, our adjusted total trials are: 4566 + 4991 = 9557 games played
+Using this our adjusted probability for each player winning is (P1 = Player 1 Random, P2 = Player 2 Random:
+Probability P1 Winning = 4566/9557 = 0.4778
+Probability P2 Winning = 4991/9557 = 0.5222
+
+Using these probabilities, we can setup a Binomial Test to investigate the p-value and signifance of the results, here
+the values used in the binomial test are:
+
+n = number of games played(adjusted) = 9557
+k = number of games won by Player 2 = 4991
+p = 0.5, which is the probability of success under the null hypothesis H0
+
+However, since our n value is very large (since np > 5 and nq > 5 because (np = nq = 4778.5)),
+we can perform a normal approximation:
+
+Under the null hypothesis, which is H0, our probability of success (P2 winning) must be 0.5. Hence p = 0.5,
+we know that our n value is 9557. So we can calculate our expected mean and standard deviation
+
+expected mean = 9557 * 0.5 = 4778.5
+(expected standard deviation)^2 = 9557*0.5*(1-0.5) = 2389.25   ---> square root both sides to get s.d.
+expected standard deviation is therefore approximately 48.88
+
+As established, we are performing normal approximation, so let us get the z-score for our corresponding mean and standard
+deviation values:
+
+z = (k - expected mean)/(expected standard deviation) = (4991 - 4778.5)/48.88 = 4.347, approximately 4.35
+
+Using this z-score of 4.35, we have to find the corresponding p-value on the normal distribution table,
+this corresponds to 0.000013614, since it is a two-tailed hypothesis we doubled our p-value (Calculated using symbolab's
+p-value calculator, the link for which is below:
+https://www.symbolab.com/calculator/statistics/p-value?calculator=p-value&target=0&have=0&z_score=4.35
+
+This value represents the probability that P2 wins 4778.5 times exactly, or probability of H0 being true.
+However, this probability value is well below the significance threshold of p = 0.05 as our p-value is 0.000013614.
+Hence, we have to reject H0 with a high degree of confidence. Indicating that Player 2 must have an advantage over
+Player 1, thus Ha holds, and one player has an advantage over the other even though both use the Random strategy.
+
+CONCLUSION:
+H0 is rejected, and Ha must be true
+------------------------------------------------------------------------------------------
+
+References: 
+https://www.thoughtco.com/null-hypothesis-vs-alternative-hypothesis-3126413
